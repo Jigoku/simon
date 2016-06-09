@@ -20,6 +20,7 @@ require "sound"
 
 
 function love.load()
+	love.graphics.setBackgroundColor(10,10,10,255)
 	title:init()
 end
 

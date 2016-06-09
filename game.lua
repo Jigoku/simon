@@ -13,7 +13,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  --]]
  
- game = {
+
+game = {
 	mode = 0,
 	buttonMaxOpacity = 255,
 	buttonMinOpacity = 50,
@@ -21,6 +22,8 @@
 	playbackCycle = 0.5,
 	playbackDelay = 0.5,
 	playbackPos = 0,
+	waitCycle = 1,
+	waitDelay = 1,
 }
 
 
@@ -33,10 +36,10 @@ function game:init()
 	self.score = 0
 	self.playback = true
 	self.input = {}
-	self.pattern = {}
+	self.sequence = {}
 
-	game.buttons = {
-		w = 100,
+	self.buttons = {
+		w = 120,
 		h = 100,
 		padding = 10,
 	}
@@ -149,36 +152,31 @@ function game:draw()
 	if debug then
 		
 		love.graphics.setColor(255,255,255,255)
-		love.graphics.print("pattern: ".. table.concat(game.pattern, ", "),5,200)
+		love.graphics.print("sequence: ".. table.concat(self.sequence, ", "),5,50)
 		love.graphics.setColor(255,255,255,255)
-		love.graphics.print("input: ".. table.concat(game.input, ", "),5,215)
+		love.graphics.print("input: ".. table.concat(self.input, ", "),5,65)
 	end
 end
 
-
+			
 function game:update(dt)
 
-	--check if our input matches the sequenced pattern
-	if #game.input > 0 then
-		for n=0, #game.input do
-			if not (game.input[n] == game.pattern[n]) then
-				print("LOSE")
-				game.mode = 0
+	--check if our input matches the sequence
+	if #self.input > 0 then
+		for n=0, #self.input do
+			if not (self.input[n] == self.sequence[n]) then
+				self:lose()
 			end
 		end
 		
-		if (#game.pattern == #game.input) then
-				game.score = game.score + #game.pattern 
-				game.playback = true
-				game.input = {}
-				print ("WIN!")		
-			
+		if (#self.sequence == #self.input) then	
+			self:win()
 		end
 	end
 
 
 	--let the computer chose the next sequence
-	if game.playback then
+	if self.playback then
 		
 		--start a timer
 		self.playbackCycle = math.max(0, self.playbackCycle - dt)
@@ -189,30 +187,26 @@ function game:update(dt)
 			--if we've just started to playback the sequence, append to it
 			if self.playbackPos == 0 then
 				math.randomseed(os.time())
-				game.pattern[#game.pattern+1] = math.random(0,3)
+				game.sequence[#game.sequence+1] = math.random(0,3)
 			end
-			
 			
 			self.playbackPos = self.playbackPos+1
 			
 			--animate the button when playing back sequence
-			for i, pattern in ipairs(game.pattern) do
+			for i, sequence in ipairs(game.sequence) do
 				if i == self.playbackPos then
-					game:animbutton(pattern)
+					game:animbutton(sequence)
 				end
 			end
 
 			--reach the end of playback (allow player to input sequence)
-			if self.playbackPos == #self.pattern then
+			if self.playbackPos == #self.sequence then
 				self.playbackPos = 0
-				game.playback = false
+				self.playback = false
 			end
-		end
-			
-
-		
-		
+		end		
 	end
+
 
 	--animates the buttons
 	for i, button in ipairs(game.buttons) do
@@ -236,6 +230,19 @@ function game:update(dt)
 end
 
 
+function game:lose()
+	print("LOSE (score: ".. self.score ..")")
+	self.mode = 0
+end
+
+function game:win()
+	self.score = self.score + #self.sequence 
+	self.playback = true
+	self.input = {}
+	print ("WIN!")	
+end	
+
+
 function game:animbutton(n)
 	--triggers the animation/sound for a button
 	for i,button in ipairs(game.buttons) do
@@ -250,7 +257,7 @@ end
 
 function game:keypressed(key)
 	if key == "escape" then
-		game.mode = 0
+		self.mode = 0
 	end	
 end
 
@@ -259,27 +266,23 @@ end
 
 
 function game:mousepressed(x,y,button)
-	if game.playback then return end
+	if self.playback then return end
 
 	--check if we clicked a button
-    if button == "l" then
-        for i, button in ipairs(game.buttons) do
+	if button == "l" then
+		for i, button in ipairs(game.buttons) do
 
-				if collision:check(
-					x,y,
-					0,0,
-					button.x+self.buttons.x,
-					button.y+self.buttons.y,
-					button.w,button.h
-				) then
-					self:animbutton(button.value)
-					--add the button to our input queue
-					game.input[#game.input+1] = button.value
-					
-				end
-        end
-    end
-
-
-
+			if collision:check(
+				x,y,
+				0,0,
+				button.x+self.buttons.x,
+				button.y+self.buttons.y,
+				button.w,button.h
+			) then
+				self:animbutton(button.value)
+				--add the button to our input queue
+				self.input[#game.input+1] = button.value					
+			end
+		end
+	end
 end

@@ -15,10 +15,10 @@
  
 sound = {}
 
-sound.red = love.audio.newSource("sound/0.wav", "static")
-sound.green = love.audio.newSource("sound/1.wav", "static")
-sound.blue = love.audio.newSource("sound/2.wav", "static")
-sound.yellow = love.audio.newSource("sound/3.wav", "static")
+sound.red = love.audio.newSource("sound/0.wav")
+sound.green = love.audio.newSource("sound/1.wav")
+sound.blue = love.audio.newSource("sound/2.wav")
+sound.yellow = love.audio.newSource("sound/3.wav")
 
 function sound:play(effect)
 	if effect:isPlaying() then

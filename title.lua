@@ -100,7 +100,7 @@ function title:keypressed(key)
         if key == "escape" then
 		love.event.quit()
 	elseif key == " " then
-		game.mode = 1
+		game:init()
 	end
 end 
 
