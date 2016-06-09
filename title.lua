@@ -49,21 +49,21 @@ function title:draw()
 
 		--background
 		if button.active then
-			love.graphics.setColor(55,0,0,255)
+			love.graphics.setColor(40,40,40,255)
 		else
-			love.graphics.setColor(55,0,0,55)
+			love.graphics.setColor(25,25,25,255)
 		end
 		love.graphics.rectangle("fill",button.x,button.y,button.w,button.h)
 
-
 		--border
-		love.graphics.setColor(155,0,0,255)
+		love.graphics.setColor(30,30,30,255)
 		love.graphics.rectangle("line",button.x,button.y,button.w,button.h)
 
 		--text
+		love.graphics.setFont(fonts.title)
 		love.graphics.setColor(255,255,255,255)
-		love.graphics.print(button.text,button.x,button.y)
-
+		love.graphics.printf(button.text,0,button.y+button.h/4,love.graphics.getWidth(), "center")
+		love.graphics.setFont(fonts.default)
 	end
 
 end

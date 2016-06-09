@@ -21,6 +21,13 @@ require "sound"
 
 function love.load()
 	love.graphics.setBackgroundColor(10,10,10,255)
+	
+	fonts = {
+		default = love.graphics.newFont("data/fonts/Hanken/Hanken-Book.ttf",12),
+		title = love.graphics.newFont("data/fonts/Hanken/Hanken-Book.ttf",24),
+		large = love.graphics.newFont("data/fonts/Hanken/Hanken-Book.ttf",26),
+	}
+	love.graphics.setFont(fonts.default)
 	title:init()
 end
 
@@ -34,8 +41,8 @@ function love.draw()
 
 	if debug then 
 		love.graphics.setColor(255,255,255,255)
-        	love.graphics.print(game.mode == 0 and "title(0)" or "game(1)",5,5)
-        	love.graphics.print("mouse: "..love.mouse.getX()..","..love.mouse.getY(),5,15)
+        love.graphics.print(game.mode == 0 and "title(0)" or "game(1)",5,5)
+        love.graphics.print("mouse: "..love.mouse.getX()..","..love.mouse.getY(),5,15)
 	end
 
 end

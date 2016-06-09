@@ -16,33 +16,30 @@
 
 game = {
 	mode = 0,
-	buttonMaxOpacity = 255,
-	buttonMinOpacity = 50,
-	buttonSpeed = 2000,
-	playbackCycle = 0.5,
-	playbackDelay = 0.5,
-	playbackPos = 0,
-	waitCycle = 1,
-	waitDelay = 1,
 }
 
 
 
 function game:init()
 	self.mode = 1
-
-	self.buttons = {}
-
-	self.score = 0
-	self.playback = true
+	
+	self.buttonMaxOpacity = 255
+	self.buttonMinOpacity = 50
+	self.buttonSpeed = 2000
+	self.playbackCycle = 0.5
+	self.playbackDelay = 0.5
+	self.playbackPos = 0
+	
 	self.input = {}
 	self.sequence = {}
-
 	self.buttons = {
 		w = 120,
 		h = 100,
 		padding = 10,
 	}
+
+	self.score = 0
+	self.playback = true
 
 	self.buttons.canvas = love.graphics.newCanvas( 
 		self.buttons.w*2+self.buttons.padding,
@@ -118,9 +115,11 @@ function game:init()
 end
 
 function game:draw()
+	love.graphics.setFont(fonts.large)
 	love.graphics.setColor(255,255,255,255)
-	love.graphics.print("Score: ".. game.score, love.graphics.getWidth()-200,10)
-
+	love.graphics.printf("Score: ".. game.score, 0,love.graphics.getHeight()-100,love.graphics.getWidth(),"center")
+	love.graphics.setFont(fonts.default)
+	
 	love.graphics.setCanvas(self.buttons.canvas)
 	self.buttons.canvas:clear(0,0,0,255)
 	
@@ -145,12 +144,13 @@ function game:draw()
 	)
 
 	if self.playback then
+		love.graphics.setFont(fonts.large)
 		love.graphics.setColor(255,255,255,255)
-		love.graphics.print("Simon Says...", love.graphics.getWidth()/2, love.graphics.getHeight()/5)
+		love.graphics.printf("Simon Says...", 0, 50, love.graphics.getWidth(), "center")
+		love.graphics.setFont(fonts.default)
 	end
 	
 	if debug then
-		
 		love.graphics.setColor(255,255,255,255)
 		love.graphics.print("sequence: ".. table.concat(self.sequence, ", "),5,50)
 		love.graphics.setColor(255,255,255,255)
