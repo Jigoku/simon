@@ -20,6 +20,8 @@ require "sound"
 
 
 function love.load()
+
+	debug = false
 	love.graphics.setBackgroundColor(10,10,10,255)
 	
 	fonts = {

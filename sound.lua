@@ -20,6 +20,9 @@ sound.green = love.audio.newSource("data/sound/1.wav")
 sound.blue = love.audio.newSource("data/sound/2.wav")
 sound.yellow = love.audio.newSource("data/sound/3.wav")
 
+sound.lose = love.audio.newSource("data/sound/lose.wav")
+sound.click = love.audio.newSource("data/sound/click.wav")
+
 function sound:play(effect)
 	if effect:isPlaying() then
 		effect:stop()

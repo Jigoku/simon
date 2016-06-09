@@ -40,12 +40,16 @@ function game:init()
 
 	self.score = 0
 	self.playback = true
-
+	self.endgame = false
+	
+	self.msgstr = "Simon says..."
+	
 	self.buttons.canvas = love.graphics.newCanvas( 
 		self.buttons.w*2+self.buttons.padding,
 		self.buttons.h*2+self.buttons.padding 
 	)
 
+	self.buttons.a = 255
 	self.buttons.x = love.graphics.getWidth()/2-self.buttons.canvas:getWidth()/2
 	self.buttons.y = love.graphics.getHeight()/2-self.buttons.canvas:getHeight()/2
 
@@ -121,7 +125,7 @@ function game:draw()
 	love.graphics.setFont(fonts.default)
 	
 	love.graphics.setCanvas(self.buttons.canvas)
-	self.buttons.canvas:clear(0,0,0,255)
+	self.buttons.canvas:clear(10,10,10,255)
 	
     for i, button in ipairs(game.buttons) do
 		love.graphics.setColor(button.r,button.g,button.b,button.a)
@@ -136,17 +140,17 @@ function game:draw()
 	end
 	
 	love.graphics.setCanvas()
-	love.graphics.setColor(255,255,255,255)
+	love.graphics.setColor(255,255,255,self.buttons.a)
 	love.graphics.draw(
 		self.buttons.canvas, 
 		self.buttons.x,
 		self.buttons.y
 	)
 
-	if self.playback then
+	if self.playback or self.endgame then
 		love.graphics.setFont(fonts.large)
 		love.graphics.setColor(255,255,255,255)
-		love.graphics.printf("Simon Says...", 0, 50, love.graphics.getWidth(), "center")
+		love.graphics.printf(self.msgstr, 0, 50, love.graphics.getWidth(), "center")
 		love.graphics.setFont(fonts.default)
 	end
 	
@@ -160,7 +164,13 @@ end
 
 			
 function game:update(dt)
-
+	
+	if self.endgame then
+		self.buttons.a = self.buttons.a - 100 *dt
+		if self.buttons.a <= 0 then self.mode = 0 end
+		return
+	end
+	
 	--check if our input matches the sequence
 	if #self.input > 0 then
 		for n=0, #self.input do
@@ -173,6 +183,8 @@ function game:update(dt)
 			self:win()
 		end
 	end
+
+
 
 
 	--let the computer chose the next sequence
@@ -231,15 +243,15 @@ end
 
 
 function game:lose()
-	print("LOSE (score: ".. self.score ..")")
-	self.mode = 0
+	sound:play(sound.lose)
+	self.msgstr = "Game Over!"
+	self.endgame = true
 end
 
 function game:win()
 	self.score = self.score + #self.sequence 
 	self.playback = true
 	self.input = {}
-	print ("WIN!")	
 end	
 
 
@@ -269,7 +281,7 @@ function game:mousepressed(x,y,button)
 	if self.playback then return end
 
 	--check if we clicked a button
-	if button == "l" then
+	if button == "l" and not self.endgame then
 		for i, button in ipairs(game.buttons) do
 
 			if collision:check(

@@ -65,7 +65,10 @@ function title:draw()
 		love.graphics.printf(button.text,0,button.y+button.h/4,love.graphics.getWidth(), "center")
 		love.graphics.setFont(fonts.default)
 	end
-
+	love.graphics.setFont(fonts.large)
+	love.graphics.setColor(255,255,255,255)
+	love.graphics.printf("Simon says...", 0, 50, love.graphics.getWidth(), "center")
+	love.graphics.setFont(fonts.default)
 end
 
 function title:update(dt)
@@ -86,6 +89,7 @@ function title:mousepressed(x,y,button)
 	if button == "l" then
 		for i, button in ipairs(title.buttons) do
 			if collision:check(x,y,0,0,button.x,button.y,button.w,button.h) then
+				sound:play(sound.click)
 				if button.name == "exit" then
 					love.event.quit()			
 				elseif button.name == "play" then
@@ -97,7 +101,7 @@ function title:mousepressed(x,y,button)
 end
 
 function title:keypressed(key)
-        if key == "escape" then
+	if key == "escape" then
 		love.event.quit()
 	elseif key == " " then
 		game:init()
