@@ -86,7 +86,7 @@ function title:mousemoved(x,y)
 end
 
 function title:mousepressed(x,y,button)
-	if button == "l" then
+	if button == 1 then
 		for i, button in ipairs(title.buttons) do
 			if collision:check(x,y,0,0,button.x,button.y,button.w,button.h) then
 				sound:play(sound.click)

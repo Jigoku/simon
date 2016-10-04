@@ -125,7 +125,7 @@ function game:draw()
 	love.graphics.setFont(fonts.default)
 	
 	love.graphics.setCanvas(self.buttons.canvas)
-	self.buttons.canvas:clear(10,10,10,255)
+	love.graphics.clear(10,10,10,255)
 	
     for i, button in ipairs(game.buttons) do
 		love.graphics.setColor(button.r,button.g,button.b,button.a)
@@ -249,7 +249,8 @@ function game:lose()
 end
 
 function game:win()
-	self.score = self.score + #self.sequence 
+	--increase score
+	self.score = self.score + #self.sequence
 	self.playback = true
 	self.input = {}
 end	
@@ -281,7 +282,7 @@ function game:mousepressed(x,y,button)
 	if self.playback then return end
 
 	--check if we clicked a button
-	if button == "l" and not self.endgame then
+	if button == 1 and not self.endgame then
 		for i, button in ipairs(game.buttons) do
 
 			if collision:check(
@@ -293,7 +294,8 @@ function game:mousepressed(x,y,button)
 			) then
 				self:animbutton(button.value)
 				--add the button to our input queue
-				self.input[#game.input+1] = button.value					
+				self.input[#game.input+1] = button.value	
+								
 			end
 		end
 	end
